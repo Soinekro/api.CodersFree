@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Post\Category;
 use Illuminate\Http\Request;
 
+use App\Http\Resources\Post\CategoryResource;
+
 class CategoryController extends Controller
 {
     /**
@@ -19,7 +21,7 @@ class CategoryController extends Controller
         ->filter()
         ->sort()
         ->getOrpaginate();
-        return $categories;
+        return CategoryResource::collection($categories);
     }
 
     /**
@@ -50,7 +52,7 @@ class CategoryController extends Controller
     {
 
         $category =Category::included()->findorFail($id);
-        return $category;
+        return CategoryResource::make($category);
     }
 
     /**
