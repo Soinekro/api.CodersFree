@@ -13,8 +13,13 @@ class Post extends Model
 {
     use HasFactory, ApiTrait;
 
+    protected $fillable = ['id','name','extract','slug','body','category_id','user_id'];
     const BORRADOR = 1;
     const PUBLICADO = 2;
+
+    protected $allowIncluded = ['user','tag'];
+    protected $allowFilter = ['id','name','slug'];
+    protected $allowSort = ['id','name','slug'];
 
     //relacion 1 a muchios inv
 
