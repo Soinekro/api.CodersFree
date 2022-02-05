@@ -3,7 +3,7 @@
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Post\CategoryController;
 use App\Http\Controllers\Api\Post\PostController;
-use App\Http\Controllers\Api\User\RegisterController;
+use App\Http\Controllers\Api\Auth\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
