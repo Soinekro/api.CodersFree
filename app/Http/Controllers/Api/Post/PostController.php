@@ -46,7 +46,7 @@ class PostController extends Controller
         $user = auth()->user();
         $data['user_id']=$user->id;
 
-        $post = Post::create($request->all());
+        $post = Post::create($data);
 
         return PostResource::make($post);
     }
