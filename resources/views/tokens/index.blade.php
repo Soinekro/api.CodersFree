@@ -65,10 +65,7 @@
                                 {{-- mostrar token --}}
                                 <td class="flex divide-x divide-gray-600 py-2">
                                     <a class="pr-2 hover:text-green-500 font-semibold cursor-pointer"
-                                        v-on:click="">Ver</a>
-                                    {{-- editar token --}}
-                                    <a class="px-2 hover:text-blue-500 font-semibold cursor-pointer"
-                                        v-on:click="">editar</a>
+                                        v-on:click="show(token)">Ver</a>
                                     {{-- eliminar token --}}
                                     <a class="pl-2 hover:text-red-500 font-semibold cursor-pointer"
                                         v-on:click="revoke(token)">Eliminar</a>
@@ -79,6 +76,27 @@
                 </div>
             </x-form-section>
         </x-container>
+
+        <x-dialog-modal modal="showToken.open">
+            <x-slot name="title">
+                Mostrar Access Token
+            </x-slot>
+            <x-slot name="content">
+                <div class="space-y-2 overflow-auto">
+                    <p>
+                        <span>Token:</span><br>
+                        <span><b>@{{ showToken.id }}</b></span>
+                    </p>
+
+                </div>
+
+            </x-slot>
+            <x-slot name="footer">
+                <button type="button"
+                    class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                    v-on:click="showToken.open = false">Cancel</button>
+            </x-slot>
+        </x-dialog-modal>
     </div>
 
     @push('js')
@@ -91,12 +109,20 @@
                         name:'',
                         errors:[],
                         disabled:false,
+                    },
+                    showToken:{
+                        open:false,
+                        id:null,
                     }
                 },
                 mounted() {
                     this.getTokens();
                 },
                 methods: {
+                    show(token){
+                        this.showToken.open=true;
+                        this.showToken.id=token.id;
+                    },
                     getTokens(){
                         axios.get('/oauth/personal-access-tokens')
                         .then(response =>{
@@ -134,7 +160,7 @@
 
                                 Swal.fire(
                                     'Eliminado!',
-                                    'El Cliente Fue Eliminado con Exito!!.',
+                                    'El Tokene Fue Eliminado con Exito!!.',
                                     'success'
                                 )
                             }
