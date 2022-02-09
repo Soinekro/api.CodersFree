@@ -20,7 +20,9 @@
                     <strong class="font-bold">Whopps!!!</strong>
                     <span>algo salio Mal!!!</span>
                     <ul>
-                        <li v-for="error in form.errors">@{{ error }}</li>
+                        <li v-for="error in form.errors">
+                            @{{ error }}
+                        </li>
                     </ul>
                 </div>
                 <div class="grid grid-cols-6 gap-6">
@@ -30,6 +32,18 @@
                             nombre
                         </x-label>
                         <x-input v-model="form.name" type="text" class="w-full mt-1" />
+                    </div>
+                    <div class=" col-span-6 sm:col-span-4">
+                        <div v-if="scopes.length > 0">
+                            <x-label>
+                                Scopes
+                            </x-label>
+                            <div v-for = "scope in scopes">
+                                <input type="checkbox" name="scopes" :value= "scope.id" v-model="form.scopes">
+                                @{{scope.id}}
+                            </div>
+                        </div>
+                        @{{form.scopes}}
                     </div>
                 </div>
                 <x-slot name="actions">
@@ -76,7 +90,7 @@
                 </div>
             </x-form-section>
         </x-container>
-
+        {{-- mostrar tokens --}}
         <x-dialog-modal modal="showToken.open">
             <x-slot name="title">
                 Mostrar Access Token
@@ -87,9 +101,7 @@
                         <span>Token:</span><br>
                         <span><b>@{{ showToken.id }}</b></span>
                     </p>
-
                 </div>
-
             </x-slot>
             <x-slot name="footer">
                 <button type="button"
@@ -105,9 +117,11 @@
                 el:"#app",
                 data: {
                     tokens:[],
+                    scopes:[],
                     form:{
                         name:'',
                         errors:[],
+                        scopes:[],
                         disabled:false,
                     },
                     showToken:{
@@ -117,17 +131,24 @@
                 },
                 mounted() {
                     this.getTokens();
+                    this.getScopes();
                 },
                 methods: {
                     show(token){
                         this.showToken.open=true;
                         this.showToken.id=token.id;
                     },
+                    getScopes(){
+                        axios.get('/oauth/scopes')
+                        .then(response =>{
+                            this.scopes = response.data;
+                        });
+                    },
                     getTokens(){
                         axios.get('/oauth/personal-access-tokens')
                         .then(response =>{
                             this.tokens = response.data;
-                        })
+                        });
                     },
                     store(){
                         this.form.disabled = true;
@@ -135,6 +156,7 @@
                         .then(response =>{
                             this.form.name = '';
                             this.form.errors = [];
+                            this.form.scopes = [];
                             this.form.disabled = false;
                             this.getTokens();
                         }).catch(error => {
